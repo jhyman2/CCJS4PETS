@@ -1,0 +1,142 @@
+openapi: 3.0.0
+info:
+  title: Example API 7
+  description: An API to test converting Open API Specs 3.0 to GraphQL
+  version: 1.0.0
+  termsOfService: 'http://example.com/terms/'
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+externalDocs:
+  url: 'http://example.com/docs'
+  description: Some more natural language description.
+tags:
+  - name: test
+    description: Indicates this API is for testing
+servers:
+  - url: 'http://localhost:{port}'
+    description: The location of the local test server.
+    variables:
+      port:
+        default: '8080'
+paths:
+  /pets:
+    get:
+      description: Return all available pets
+      responses:
+        '202':
+          description: A Pet collection
+          content:
+            application/json:
+              schema:
+                type: array
+                description: The pet collection
+                items:
+                  $ref: '#/components/schemas/Pet'
+  '/pet/{petName}':
+    get:
+      operationId: findPetByName
+      description: Find a pet by its name.
+      parameters:
+        - name: petName
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          $ref: '#/components/schemas/Pet'
+components:
+  schemas:
+    Pet:
+      type: object
+      description: 'A pet belonging to the animal kingdom'
+      properties:
+        id:
+          type: integer
+          description: The record ID of a pet
+        bio:
+          type: string
+          description: A short biography of the pet. Usually includes likes and dislikes
+        breed:
+          type: string
+          description: The breed of the pet
+        img:
+          type: string
+          description: A URL pointing to an image of the pet
+        name:
+          type: string
+          description: The name of a pet
+        petType:
+          type: string
+          description: The type of pet. Examples include cat, dog, bird, but could also be a rock
+        weight:
+          type: number
+          description: The number of pounds that the pet weighs. The number displayed when they step on a scale
+    User:
+      type: object
+      description: A user represents a natural person
+      properties:
+        name:
+          type: string
+          description: The legal name of a user
+    Device:
+      type: object
+      description: A device is an object connected to the network
+      properties:
+        name:
+          type: string
+          description: The device name in the network
+        userName:
+          type: string
+          description: The device owner Name
+        status:
+          type: boolean
+      required:
+        - name
+        - userName
+    Topic:
+      type: object
+      description: A topic is used to listen events
+      properties:
+        userName:
+          type: string
+          description: The device owner
+        deviceName:
+          type: string
+          description: The device name
+        method:
+          type: string
+          description: The device method to watch
+          example: Equivalent to HTTP methods
+      required:
+        - userName
+        - method
+    Error:
+      type: object
+      description: A topic is used to listen an event
+      properties:
+        code:
+          type: string
+          description: Error code
+        message:
+          type: string
+          description: Error message
+      required:
+        - code
+        - message
+  requestBodies:
+    EventsBody:
+      description: Properties to generate the event path
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Topic'
+  responses:
+    GeneralError:
+      description: Error reponse
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
