@@ -36,4 +36,20 @@
  *       required: true
  *       schema:
  *         type: string
+ *   callbacks:
+ *     NewPet:
+ *       '/addNewPet':
+ *         post:
+ *           operationId: addNewPetListener
+ *           description: Listen all devices events owned by userName
+ *           responses:
+ *             '200':
+ *                description: Use to request all pets
+ *                content:
+ *                  application/json:
+ *                    schema:
+ *                      type: array
+ *                      description: The pet collection
+ *                      items:
+ *                        $ref: '#/components/schemas/Pet'
  */
