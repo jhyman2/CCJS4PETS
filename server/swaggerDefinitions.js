@@ -28,4 +28,12 @@
  *         weight:
  *           type: number
  *           description: The number of pounds that the pet weighs. The number displayed when they step on a scale
+ *   parameters:
+ *     name:
+ *       name: name
+ *       in: query
+ *       description: The name of a pet.
+ *       required: true
+ *       schema:
+ *         type: string
  */
