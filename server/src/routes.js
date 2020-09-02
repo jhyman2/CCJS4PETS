@@ -2,6 +2,7 @@ const redisClient = require('redis');
 const { promisify } = require('util');
 const faker = require('faker');
 
+const pubsub = require('./pubsub');
 const PET_DATA = require('./data');
 const REDIS_PORT = 6379;
 
@@ -41,7 +42,7 @@ const api = (app) => {
    *                  $ref: '#/components/schemas/Pet'   
    */
   app.get('/pets', async (req, res) => {
-    console.log('hit pet endpoint');
+    console.log('pet endpoint');
     try {
       const pets = await getPetsInRedis();
       res.send(pets);
@@ -83,6 +84,59 @@ const api = (app) => {
    * /add_new_pet:
    *   post:
    *     operationId: addNewPet
+   *     description: Add a new pet with supplied data
+   *     requestBody:
+   *       $ref: '#/components/requestBodies/PetBody'
+   *     responses:
+   *       '200':
+   *          description: Add a new pet with supplied data
+   *          content:
+   *            application/json:
+   *              schema:
+   *                $ref: '#/components/schemas/Pet'
+   *     callbacks:
+   *       petAdded:
+   *         $ref: '#/components/callbacks/NewPet'
+   */
+  app.post('/add_new_pet', async (req, res) => {
+    console.log('/add_new_pet body', req.body);
+    try {
+      const newPet = {
+        id: faker.random.number(),
+        bio: req.body.bio,
+        breed: req.body.breed,
+        img: req.body.img,
+        name: req.body.name,
+        petType: req.body.petType,
+        weight: req.body.weight,
+      };
+      await hmset('pets', {
+        [newPet.id]: JSON.stringify(newPet),
+      });
+
+      const allPets = await getPetsInRedis();
+
+      const packet = {
+        topic: '/pets',
+        payload: Buffer.from(JSON.stringify(allPets)),
+      };
+
+      // Use pubsub to publish the event
+      pubsub.publish(packet);
+
+      console.log('sending new pet', newPet);
+      res.send(newPet);
+    } catch (e) {
+      console.log('error', e);
+      res.send('error');
+    }
+  });
+
+  /**
+   * @swagger
+   * /add_random_pet:
+   *   post:
+   *     operationId: addRandomPet
    *     description: Add a new pet with random data
    *     responses:
    *       '200':
@@ -92,11 +146,11 @@ const api = (app) => {
    *              schema:
    *                $ref: '#/components/schemas/Pet'
    *     callbacks:
-   *       addNewPet:
+   *       petAdded:
    *         $ref: '#/components/callbacks/NewPet'
    */
-  app.post('/add_new_pet', async (req, res) => {
-    console.log('/add_new_pet endpoint');
+  app.post('/add_random_pet', async (req, res) => {
+    console.log('/add_random_pet endpoint');
     try {
       const randomPet = {
         id: faker.random.number(),
@@ -114,13 +168,13 @@ const api = (app) => {
       const allPets = await getPetsInRedis();
 
       const packet = {
-        payload: Buffer.from(JSON.stringify(allPets))
-      }
+        topic: '/pets',
+        payload: Buffer.from(JSON.stringify(allPets)),
+      };
 
       // Use pubsub to publish the event
       pubsub.publish(packet);
 
-      console.log('sending random pet');
       res.send(randomPet);
     } catch (e) {
       console.log('error', e);

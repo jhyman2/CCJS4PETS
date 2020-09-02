@@ -1,89 +1,29 @@
-import React, { useState, useEffect } from 'react';
-import { useQuery, gql } from '@apollo/react-hooks';
+import React, { useState } from 'react';
+import RestPets from './components/RestPets';
+import ApolloPets from './components/ApolloPets';
+import AddPetForm from './components/AddPetForm';
+
 import './App.css';
 
-const GET_PETS = gql`
-  query getPets {
-    pets {
-      bio
-      breed
-      img
-      name
-      weight
-    }
-  }
-`;
-
-type Pet = {
-  bio: string
-  breed: string
-  img: string
-  name: string
-  weight: number
-}
-
-const RestPets = () => {
-  const [petTypes, setPetTypes] = useState([] as Pet[]);
-
-  useEffect(() => {
-    fetch('/pets')
-      .then(res => res.json())
-      .then((res => setPetTypes(res)));
-  }, []);
-
-  return (
-    <>
-      {petTypes.map((pet: Pet) => <div key={pet.name}>{pet.name}</div>)}
-    </>
-  );
-};
-
-const ApolloPets = () => {
-  const { loading, error, data } = useQuery(GET_PETS);
-
-  if (loading) {
-    return <div>loading...</div>;
-  }
-
-  if (error) {
-    return (
-      <div>
-        <h5>An error has occurred</h5>
-        <p>{error}</p>
-      </div>
-    );
-  }
-
-  return (
-    <div className="max-w-sm mx-auto flex-col p-6 bg-white rounded-lg shadow-xl">
-      <h1 className="text-center text-2xl">Welcome to CCJS4PETS</h1>
-      <p className="text-center">Login or Register with:</p>
-      <div className="text-center">
-        {data.pets.map((pet: Pet) => (
-          <div key={pet.name} style={{ display: 'block', margin: 20 }}>
-            <span style={{ fontWeight: 'bolder' }}>{pet.name}</span>
-            <img
-              alt={pet.name}
-              height={150}
-              src={pet.img}
-              width={150}
-            />
-            <span>{pet.breed}</span>
-            <span>{pet.bio}</span>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-};
-
 function App() {
+  const [petsStale, setPetsStale] = useState(true);
+
   return (
     <div className="App">
-      <h1>This data was retrieved using REST</h1>
-      <RestPets />
-      <h1>This data was retrieved using GraphQL</h1>
-      <ApolloPets />
+      <h1 className="text-center text-2xl">Welcome to CCJS4PETS</h1>
+      <div className="flex flex-row">
+        <div className="flex flex-col flex-grow">
+          <h1>This data was retrieved using REST</h1>
+          <RestPets petsStale={petsStale} setPetsStale={setPetsStale} />
+        </div>
+        <div className="flex flex-col flex-grow">
+          <AddPetForm setPetsStale={setPetsStale} />
+        </div>
+        <div className="flex flex-col flex-grow">
+          <h1>This data was retrieved using GraphQL</h1>
+          <ApolloPets />
+        </div>
+      </div>
     </div>
   );
 }

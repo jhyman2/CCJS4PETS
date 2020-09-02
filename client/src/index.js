@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
-import './styles/tailwind.css';
+import './tailwind.output.css';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
