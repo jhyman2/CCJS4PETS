@@ -89,6 +89,13 @@ const ApolloPets = (props: Props) => {
         <input
           className={inputClassNames}
           type="text"
+          placeholder="name"
+          value={name}
+          onChange={e => setName(e.target.value)}
+        />
+        <input
+          className={inputClassNames}
+          type="text"
           placeholder="bio"
           value={bio}
           onChange={e => setBio(e.target.value)}
@@ -106,13 +113,6 @@ const ApolloPets = (props: Props) => {
           placeholder="img"
           value={img}
           onChange={e => setImg(e.target.value)}
-        />
-        <input
-          className={inputClassNames}
-          type="text"
-          placeholder="name"
-          value={name}
-          onChange={e => setName(e.target.value)}
         />
         <input
           className={inputClassNames}
