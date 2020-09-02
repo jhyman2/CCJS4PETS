@@ -18,28 +18,17 @@ const GET_PETS = gql`
 `;
 
 const ApolloPets = () => {
-  const { loading, error, data } = useQuery(GET_PETS, { pollInterval: 500 });
+  const { loading, error, data } = useQuery(GET_PETS);
 
   if (loading) {
     return <div>loading...</div>;
   }
 
   if (error) {
-    return (
-      <div>
-        <h5>An error has occurred</h5>
-        <p>{error}</p>
-      </div>
-    );
+    return <div>an error has occurred</div>;
   }
 
-  return (
-    <div className="max-w-sm mx-auto flex-col p-6 bg-white rounded-lg shadow-xl overflow-auto" style={{ height: 800 }}>
-      <div className="text-center">
-        {data.pets.map((pet: Pet) => <SinglePet {...pet} />)}
-      </div>
-    </div>
-  );
+  return data.pets.map((pet: Pet) => <SinglePet {...pet} />);
 };
 
 export default ApolloPets;

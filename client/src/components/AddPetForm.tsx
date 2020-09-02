@@ -54,9 +54,6 @@ const ApolloPets = (props: Props) => {
       },
       // want to see some magic?
       // refetchQueries: () => ['getPets'],
-
-      // want to see even more magic?
-      // pollInterval: 500,
     });
 
     clearInputs();
@@ -65,15 +62,9 @@ const ApolloPets = (props: Props) => {
   const createPetWithRest = async () => {
     const response = await fetch('http://localhost:3000/add_new_pet', {
       method: 'POST',
-      mode: 'cors', // no-cors, *cors, same-origin
-      // cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-      credentials: 'same-origin', // include, *same-origin, omit
-      headers: {
-        'Content-Type': 'application/json'
-        // 'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      // redirect: 'follow', // manual, *follow, error
-      // referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+      mode: 'cors',
+      credentials: 'same-origin',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         bio,
         breed,
