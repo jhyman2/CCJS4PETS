@@ -15,6 +15,7 @@ const SinglePet = ({ name, breed, img, bio, weight, petType}: Pet) => (
       <div className="flex flex-col text-left ml-8 text-sm justify-center">
         <span className="font-black">{name}</span>
         <span className="italic">{breed}</span>
+        <span className="italic">{weight} lbs</span>
         <span>{bio}</span>
       </div>
     </div>
