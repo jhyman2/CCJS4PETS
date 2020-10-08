@@ -4,6 +4,8 @@ This repo is basically a Todo app but with pets.
 
 This was used for [a talk at CharmCityJS](https://www.meetup.com/charmcityjs/events/zknhppybcmbdb/).
 
+Here is the [video](https://www.youtube.com/watch?v=K_Eu_CzZRt8&feature=youtu.be)
+
 [Slides](https://docs.google.com/presentation/d/1rbmFIxu8gVuX3n-i3jvHNTvv8dx_k0bFwhjsYRd73jQ/edit?usp=sharing)
 
 ### Technologies:
